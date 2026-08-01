@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#153f34">
+<title>CA Dolly Miglani — Friendship Day</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Kalam:wght@400;700&family=VT323&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     TOKENS
+     Kept as CSS custom properties rather than compiled .scss —
+     a .scss file needs a build step (sass/webpack/vite) to become
+     browser-readable CSS, and this page is a single static file
+     meant to open directly from GitHub Pages / a phone with no
+     build tooling. Custom properties give the same "one place to
+     change every color" benefit without requiring a compiler.
+     Swap data-theme="day" on <body> (via the toggle button) to
+     see the alternate palette below.
+     ============================================================ */
+  :root{
+    --gold:#c9a15a;
+    --gold-bright:#e9caa0;
+    --paper:#f7efdc;
+    --paper-line:#d9c9a3;
+    --ink:#241b12;
+    --maroon:#7d1f2b;
+    --maroon-bright:#a53142;
+  }
+  :root, [data-theme="night"]{
+    --ledger-dark:#0e2b24;
+    --ledger:#153f34;
+    --ledger-light:#1e5445;
+    --lcd-bg:#0b1f16;
+    --lcd-text:#bfe8c9;
+    --lcd-dim:#5c8a6c;
+    --page-bg:#05110d;
+    --lcd-glow:rgba(191,232,201,0.5);
+  }
+  [data-theme="day"]{
+    --ledger-dark:#2b6b56;
+    --ledger:#347a63;
+    --ledger-light:#3f8c72;
+    --lcd-bg:#eae0c4;
+    --lcd-text:#3a2f1c;
+    --lcd-dim:#8a7a52;
+    --page-bg:#cbb989;
+    --lcd-glow:rgba(58,47,28,0.25);
+  }
+
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background:radial-gradient(circle at 30% 0%, rgba(233,202,160,0.05), transparent 55%), var(--page-bg);
+    color:var(--paper);
+    font-family:'Inter',sans-serif;
+    overflow:hidden;
+    transition:background 0.6s ease;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important;}
+  }
+  :focus-visible{ outline:2px solid var(--gold-bright); outline-offset:2px; }
+  .visually-hidden{
+    position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap;
+  }
+
+  .hearts{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+  .hearts span{ position:absolute; bottom:-10%; font-size:12px; color:var(--gold-bright); opacity:0.25; animation:floatUp linear infinite; will-change:transform, opacity; }
+  @keyframes floatUp{
+    0%{transform:translateY(0) translateX(0) rotate(0deg); opacity:0;}
+    10%{opacity:0.35;} 90%{opacity:0.2;}
+    100%{transform:translateY(-115vh) translateX(20px) rotate(25deg); opacity:0;}
+  }
+
+  .device-wrap{
+    position:relative; z-index:1; height:100vh; height:100dvh;
+    display:flex; align-items:center; justify-content:center; padding:14px;
+  }
+  .calculator{
+    width:100%; max-width:430px; height:100%; max-height:900px;
+    background:linear-gradient(160deg, var(--gold-bright) 0%, var(--gold) 12%, #7d5f28 100%);
+    border-radius:30px; padding:6px;
+    box-shadow:0 30px 70px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,0,0,0.3);
+    display:flex; flex-direction:column;
+  }
+  .calc-inner{
+    background:linear-gradient(170deg, var(--ledger-light), var(--ledger) 55%, var(--ledger-dark));
+    border-radius:25px; flex:1; display:flex; flex-direction:column; min-height:0;
+    padding:14px 14px 10px; position:relative;
+    box-shadow:inset 0 2px 6px rgba(255,255,255,0.08), inset 0 -6px 16px rgba(0,0,0,0.35);
+    transition:background 0.6s ease;
+  }
+
+  .top-strip{ display:flex; align-items:center; justify-content:space-between; padding:2px 6px 10px; gap:8px; }
+  .speaker-holes{display:flex; gap:4px;}
+  .speaker-holes span{width:4px; height:4px; border-radius:50%; background:rgba(0,0,0,0.35);}
+  .top-controls{ display:flex; align-items:center; gap:6px; }
+  .power-dot{ width:7px; height:7px; border-radius:50%; background:#ff6b6b; box-shadow:0 0 6px 2px rgba(255,107,107,0.7); animation:blink 2.2s ease-in-out infinite; }
+  @keyframes blink{0%,100%{opacity:1;}50%{opacity:0.35;}}
+  .chip-btn{
+    border:none; border-radius:7px; width:26px; height:20px; cursor:pointer; font-size:11px;
+    background:rgba(0,0,0,0.28); color:var(--gold-bright); display:flex; align-items:center; justify-content:center;
+    box-shadow:inset 0 1px 2px rgba(0,0,0,0.4);
+    transition:box-shadow 0.15s ease, transform 0.08s ease, background 0.15s ease;
+  }
+  .chip-btn:hover{ background:rgba(0,0,0,0.4); box-shadow:0 0 8px rgba(233,202,160,0.5), inset 0 1px 2px rgba(0,0,0,0.4); }
+  .chip-btn:active{ transform:translateY(1px) scale(0.94); }
+  .chip-btn[aria-pressed="true"]{ color:var(--paper); background:rgba(165,49,66,0.55); }
+
+  .nameplate{ text-align:center; padding:0 4px 10px; }
+  .nameplate .ca{
+    font-family:'Cinzel',serif; font-weight:700; font-size:19px; letter-spacing:1.3px;
+    background:linear-gradient(180deg,var(--gold-bright),var(--gold));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .nameplate .tag{ font-family:'Cinzel',serif; font-size:9px; letter-spacing:2px; color:var(--paper); opacity:0.65; margin-top:3px; }
+  .nameplate .model{ font-family:'VT323', monospace; font-size:12px; color:var(--gold-bright); opacity:0.55; margin-top:2px; letter-spacing:1px; }
+
+  .screen-bezel{ flex:1; min-height:0; background:#02110b; border-radius:12px; padding:4px; box-shadow:inset 0 0 0 2px rgba(0,0,0,0.5), inset 0 6px 14px rgba(0,0,0,0.6); }
+  .screen{
+    position:relative; height:100%; overflow-y:auto; -webkit-overflow-scrolling:touch;
+    background:radial-gradient(circle at 50% 0%, rgba(191,232,201,0.06), transparent 60%), var(--lcd-bg);
+    border-radius:9px; padding:18px 14px 24px; color:var(--lcd-text);
+    transition:background 0.6s ease, color 0.6s ease;
+  }
+  [data-theme="night"] .screen::before{
+    content:""; position:absolute; inset:0; pointer-events:none; border-radius:9px;
+    background:repeating-linear-gradient(0deg, rgba(0,0,0,0.16) 0px, rgba(0,0,0,0.16) 1px, transparent 1px, transparent 3px);
+    mix-blend-mode:multiply; opacity:0.5;
+  }
+  .screen::-webkit-scrollbar{width:5px;}
+  .screen::-webkit-scrollbar-thumb{background:rgba(191,232,201,0.25); border-radius:4px;}
+
+  .lcd-label{ font-family:'VT323', monospace; font-size:14px; letter-spacing:3px; text-transform:uppercase; color:var(--lcd-dim); text-align:center; margin-bottom:4px; }
+  .hero-block{ text-align:center; padding:10px 6px 26px; }
+  .flame-wrap{ display:flex; justify-content:center; margin-bottom:10px;}
+  .flame{
+    width:18px; height:26px; will-change:transform;
+    background:radial-gradient(ellipse at 50% 70%, #eaffef 0%, var(--lcd-text) 35%, #2f6b45 75%, transparent 80%);
+    border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
+    animation:flicker 2.4s ease-in-out infinite; filter:drop-shadow(0 0 8px var(--lcd-glow));
+  }
+  @keyframes flicker{
+    0%,100%{transform:scaleY(1) scaleX(1) rotate(0deg);}
+    25%{transform:scaleY(1.08) scaleX(0.94) rotate(-2deg);}
+    50%{transform:scaleY(0.95) scaleX(1.05) rotate(1deg);}
+    75%{transform:scaleY(1.05) scaleX(0.97) rotate(2deg);}
+  }
+  .hero-block h1{
+    font-family:'VT323', monospace; font-weight:400; font-size:34px; line-height:1.15;
+    margin:6px 0 4px; letter-spacing:1px; color:var(--lcd-text); text-shadow:0 0 12px var(--lcd-glow);
+    min-height:1.3em;
+  }
+  .typewriter-cursor{ display:inline-block; width:2px; margin-left:2px; background:var(--lcd-text); animation:caretBlink 0.9s steps(1) infinite; }
+  @keyframes caretBlink{ 50%{ opacity:0; } }
+
+  section.block{ margin-top:26px; }
+  .reveal{opacity:0; transform:translateY(18px); transition:opacity 0.7s ease, transform 0.7s ease; will-change:transform, opacity;}
+  .reveal.in{opacity:1; transform:translateY(0);}
+
+  .polaroid-wrap{display:flex; justify-content:center;}
+  .polaroid{
+    background:var(--paper); padding:10px 10px 30px; border-radius:2px;
+    box-shadow:0 12px 26px rgba(0,0,0,0.5); transform:rotate(-3deg); width:66%; position:relative;
+  }
+  .polaroid .pin{
+    position:absolute; top:-9px; left:50%; transform:translateX(-50%) rotate(-8deg);
+    width:20px; height:20px; border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, var(--gold-bright), var(--gold) 60%, #8a6a2c 100%);
+    box-shadow:0 3px 6px rgba(0,0,0,0.4);
+  }
+  .photo-frame{
+    width:100%; aspect-ratio:1/1; background:linear-gradient(135deg,#e3d3ab,#cbb387);
+    display:flex; align-items:center; justify-content:center; overflow:hidden; color:var(--ink);
+  }
+  .photo-frame img{width:100%; height:100%; object-fit:cover; display:block;}
+  .photo-frame .ph-placeholder{display:none; flex-direction:column; align-items:center; gap:4px; opacity:0.75;}
+  .photo-frame .ph-placeholder .monogram{font-family:'Cinzel',serif; font-size:32px; color:var(--maroon);}
+  .photo-frame .ph-placeholder .ph-text{font-family:'Inter'; font-size:8.5px; letter-spacing:0.3px; padding:0 10px; text-align:center; line-height:1.5;}
+  .polaroid-caption{text-align:center; font-family:'Kalam',cursive; font-size:12.5px; color:var(--ink); margin-top:8px;}
+
+  .ledger-wrap{position:relative;}
+  .stamp{
+    position:absolute; right:14px; top:-12px; font-family:'Cinzel',serif; font-size:8.5px;
+    letter-spacing:1.2px; color:var(--maroon-bright); border:2px solid var(--maroon-bright);
+    padding:3px 6px; border-radius:4px; transform:rotate(9deg); opacity:0.85; background:rgba(247,239,220,0.9);
+  }
+  .ledger-card{ background:var(--paper); color:var(--ink); border-radius:10px; padding:18px 16px; box-shadow:0 14px 30px rgba(0,0,0,0.45); }
+  .ledger-card h2{ font-family:'Cinzel',serif; font-size:12px; letter-spacing:1.6px; text-transform:uppercase; text-align:center; color:var(--maroon); margin:0 0 14px; }
+  .ledger-row{ display:flex; justify-content:space-between; padding:7px 0; border-bottom:1px dashed var(--paper-line); font-family:'Inter'; font-size:12.5px; }
+  .ledger-row span:first-child{color:#4a3d28;}
+  .ledger-row span:last-child{font-weight:600;}
+  .ledger-balance{
+    margin-top:12px; text-align:center; font-family:'Cinzel',serif; letter-spacing:0.6px;
+    background:linear-gradient(90deg,transparent,rgba(125,31,43,0.08),transparent);
+    padding:10px 6px; border-radius:6px; color:var(--maroon); font-size:12.5px;
+  }
+  .ledger-balance small{display:block; font-family:'Kalam',cursive; font-size:11.5px; color:#6b5636; margin-top:3px;}
+
+  .screen-footer{ text-align:center; margin:30px 0 6px; }
+  .screen-footer p{ font-family:'Kalam',cursive; font-size:12.5px; color:var(--lcd-dim); line-height:1.7; }
+  .press-hint{ font-family:'VT323', monospace; letter-spacing:2px; font-size:14px; color:var(--gold-bright); text-align:center; margin-top:8px; animation:blink 1.8s ease-in-out infinite; }
+
+  /* ================= GIFT KEYS ================= */
+  .keypad-wrap{ padding-top:12px; }
+  .gift-key{
+    width:100%; border:none; border-radius:14px; padding:18px 14px; margin-bottom:10px;
+    font-family:'Cinzel',serif; text-align:left; cursor:pointer; position:relative;
+    display:flex; align-items:center; gap:14px; will-change:transform, box-shadow;
+    box-shadow:0 4px 0 rgba(0,0,0,0.4), 0 1px 0 rgba(255,255,255,0.08) inset;
+    transition:transform 0.08s ease, box-shadow 0.18s ease;
+  }
+  .gift-key:hover{ box-shadow:0 4px 0 rgba(0,0,0,0.4), 0 1px 0 rgba(255,255,255,0.08) inset, 0 0 18px 2px rgba(233,202,160,0.45); }
+  .gift-key:active, .gift-key.pressed{ transform:translateY(4px); box-shadow:0 0 0 rgba(0,0,0,0.4); }
+  .gift-key.k1{ background:linear-gradient(160deg,var(--gold-bright),var(--gold) 70%); color:var(--ink); }
+  .gift-key.k1:hover{ box-shadow:0 4px 0 rgba(0,0,0,0.4), 0 1px 0 rgba(255,255,255,0.08) inset, 0 0 18px 2px rgba(233,202,160,0.7); }
+  .gift-key.k2{ background:radial-gradient(circle at 25% 20%, var(--maroon-bright), var(--maroon) 80%); color:var(--paper); }
+  .gift-key.k2:hover{ box-shadow:0 4px 0 rgba(0,0,0,0.4), 0 1px 0 rgba(255,255,255,0.08) inset, 0 0 18px 2px rgba(165,49,66,0.75); }
+  .gift-key .key-icon{ font-size:24px; flex:0 0 auto; }
+  .gift-key .key-text{ display:flex; flex-direction:column; gap:2px; }
+  .gift-key .key-num{ font-size:11px; letter-spacing:2px; text-transform:uppercase; opacity:0.75; }
+  .gift-key .key-desc{ font-size:15px; letter-spacing:0.5px; }
+
+  /* ================= MODAL ================= */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(6,16,13,0.9); backdrop-filter:blur(4px);
+    display:none; align-items:center; justify-content:center; z-index:80; padding:24px;
+  }
+  .modal-overlay.open{ display:flex; }
+  .modal-card{
+    background:var(--paper); border-radius:14px; padding:20px; max-width:340px; width:100%; max-height:82vh; overflow-y:auto;
+    text-align:center; box-shadow:0 30px 70px rgba(0,0,0,0.6);
+    animation:pop 0.4s cubic-bezier(.2,.9,.3,1.3);
+    touch-action:pan-y;
+  }
+  @keyframes pop{ from{ transform:scale(0.7); opacity:0; } to{ transform:scale(1); opacity:1; } }
+  .modal-card h3{ font-family:'Cinzel',serif; color:var(--maroon); margin:4px 0 14px; font-size:15px; letter-spacing:1px; }
+  .swipe-hint{ font-family:'Inter'; font-size:10.5px; color:#8a7a52; margin-bottom:10px; letter-spacing:0.3px; }
+
+  .letter{
+    background:var(--paper); color:var(--ink); border-radius:6px; text-align:left;
+    background-image:repeating-linear-gradient(#f7efdc 0 29px, var(--paper-line) 29px 30px);
+    background-position:0 4px; position:relative; padding-left:14px;
+  }
+  .poem{ font-family:'Kalam',cursive; font-size:14.5px; line-height:2.02; white-space:pre-line; margin:0; }
+  .poem .stanza{margin-bottom:15px; display:block;}
+  .signoff{ text-align:right; font-family:'Kalam',cursive; font-size:13.5px; margin-top:8px; padding-right:4px; color:var(--maroon); }
+
+  .gift-frame{
+    width:100%; aspect-ratio:1/1; border-radius:10px; overflow:hidden; background:linear-gradient(135deg,#e3d3ab,#cbb387);
+    display:flex; align-items:center; justify-content:center; color:var(--ink); margin-bottom:14px;
+  }
+  .gift-frame img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .gift-frame .gp{ display:none; flex-direction:column; align-items:center; gap:8px; opacity:0.75; padding:0 14px; text-align:center; }
+  .gift-frame .gp span{ font-size:32px; }
+  .gift-frame .gp small{ font-family:'Inter'; font-size:10px; line-height:1.5; }
+
+  .modal-close{
+    font-family:'Inter'; font-weight:600; background:var(--ledger); color:var(--paper);
+    border:none; padding:9px 20px; border-radius:20px; cursor:pointer; font-size:12.5px;
+    transition:box-shadow 0.15s ease, transform 0.08s ease;
+  }
+  .modal-close:hover{ box-shadow:0 0 14px rgba(21,63,52,0.6); }
+  .modal-close:active{ transform:translateY(2px); }
+  .confetti-piece{ position:fixed; top:-10px; z-index:90; pointer-events:none; border-radius:2px; will-change:transform, opacity; }
+</style>
+</head>
+<body data-theme="night">
+
+<div class="hearts" id="hearts" aria-hidden="true"></div>
+
+<div class="device-wrap">
+  <div class="calculator">
+    <div class="calc-inner">
+
+      <div class="top-strip">
+        <div class="speaker-holes" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+        <div class="top-controls">
+          <button class="chip-btn" id="themeToggle" type="button" aria-pressed="false" aria-label="Switch between night and day screen theme">🌙</button>
+          <button class="chip-btn" id="soundToggle" type="button" aria-pressed="false" aria-label="Turn soft background music on or off">🎵</button>
+          <div class="power-dot" aria-hidden="true"></div>
+        </div>
+      </div>
+
+      <div class="nameplate">
+        <div class="ca">CA DOLLY MIGLANI</div>
+        <div class="tag">Friendship Day Special</div>
+        <div class="model">MODEL DOLLY-01 · FRIENDSHIP DAY EDITION</div>
+      </div>
+
+      <div class="screen-bezel">
+        <main class="screen" id="screen" tabindex="-1" aria-label="Friendship Day card content">
+
+          <div class="hero-block reveal in">
+            <div class="flame-wrap" aria-hidden="true"><div class="flame"></div></div>
+            <div class="lcd-label">Friendship Day</div>
+            <h1 id="typedTitle" aria-live="polite"><span class="visually-hidden">For my best friend</span></h1>
+          </div>
+
+          <section class="block reveal" aria-label="Dolly's photo">
+            <div class="polaroid-wrap">
+              <div class="polaroid">
+                <div class="pin" aria-hidden="true"></div>
+                <div class="photo-frame" id="photoFrame">
+                  <img id="photoImg" src="images/dolly.jpg" alt="Photo of Dolly" loading="lazy" decoding="async">
+                  <div class="ph-placeholder" id="photoPlaceholder" role="img" aria-label="Photo not added yet">
+                    <div class="monogram" aria-hidden="true">D</div>
+                    <div class="ph-text">add images/dolly.jpg to this folder</div>
+                  </div>
+                </div>
+                <div class="polaroid-caption">Dolly ✦</div>
+              </div>
+            </div>
+          </section>
+
+          <section class="block reveal" aria-label="The friendship ledger">
+            <div class="ledger-wrap">
+              <div class="stamp">AUDITED ✓</div>
+              <div class="ledger-card">
+                <h2>The Friendship Ledger</h2>
+                <div class="ledger-row"><span>Assets — laughter, secrets, late nights</span><span>∞</span></div>
+                <div class="ledger-row"><span>Assets — silly stories, shared dreams</span><span>∞</span></div>
+                <div class="ledger-row"><span>Liabilities</span><span>None found</span></div>
+                <div class="ledger-row"><span>Provision for distance</span><span>Not required</span></div>
+                <div class="ledger-balance">
+                  CLOSING BALANCE: BEST FRIENDS FOREVER
+                  <small>paid in full, carried forward for life</small>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <div class="screen-footer reveal">
+            <p>Happy Friendship Day, Dolly. 💛<br>— Aapka Suar</p>
+            <div class="press-hint">▼ PRESS A GIFT KEY ▼</div>
+          </div>
+
+        </main>
+      </div>
+
+      <div class="keypad-wrap">
+        <button class="gift-key k1" id="gift1Btn" type="button" aria-haspopup="dialog">
+          <span class="key-icon" aria-hidden="true">🎁</span>
+          <span class="key-text">
+            <span class="key-num">Gift Key 1</span>
+            <span class="key-desc">A Poem, Just For You</span>
+          </span>
+        </button>
+        <button class="gift-key k2" id="gift2Btn" type="button" aria-haspopup="dialog">
+          <span class="key-icon" aria-hidden="true">🎁</span>
+          <span class="key-text">
+            <span class="key-num">Gift Key 2</span>
+            <span class="key-desc">A Surprise Photo</span>
+          </span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- GIFT 1: POEM MODAL -->
+<div class="modal-overlay" id="modal1" role="dialog" aria-modal="true" aria-labelledby="modal1Title">
+  <div class="modal-card" id="modal1Card">
+    <h3 id="modal1Title">An Ode to Dolly</h3>
+    <div class="swipe-hint">swipe left for the next gift · swipe down to close</div>
+    <div class="letter">
+      <p class="poem"><span class="stanza">When the world grows silent and cold,
+And faces fade, both young and old,
+There's one who stays — a steady flame,
+Whose laughter softens every pain.</span><span class="stanza">With you, the nights don't feel so long,
+We wander through our dreams and songs,
+From life's deep thoughts to tales untold,
+To Yamraj's fryer — pure chaos gold.</span><span class="stanza">You're warmth in winter, calm in rain,
+A gentle touch that soothes my pain,
+Home isn't walls or floors of stone,
+It's found in you — my heart's own home.</span><span class="stanza">We talk of nonsense, laugh till sore,
+Yet somehow, I keep loving more.
+For in your words, my worries end,
+You're not "just someone" —
+You're my best friend. 💛</span></p>
+      <div class="signoff">— Aapka Suar</div>
+    </div>
+    <button class="modal-close" id="modal1Close" type="button" style="margin-top:14px;">Close</button>
+  </div>
+</div>
+
+<!-- GIFT 2: PHOTO MODAL -->
+<div class="modal-overlay" id="modal2" role="dialog" aria-modal="true" aria-labelledby="modal2Title">
+  <div class="modal-card" id="modal2Card">
+    <h3 id="modal2Title">A Little Surprise For You</h3>
+    <div class="swipe-hint">swipe right for the poem · swipe down to close</div>
+    <div class="gift-frame" id="giftFrame">
+      <img id="giftImg" src="images/gift.jpg" alt="Surprise gift photo" loading="lazy" decoding="async">
+      <div class="gp" id="giftPlaceholder" role="img" aria-label="Gift photo not added yet">
+        <span aria-hidden="true">🎁</span>
+        <small>add images/gift.jpg to this folder</small>
+      </div>
+    </div>
+    <button class="modal-close" id="modal2Close" type="button">Close</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ============================================================
+     Modules — kept as namespaced IIFEs rather than `type="module"`
+     imports. ES modules are fetched via the same CORS rules as
+     images, so they silently fail on a page opened straight from
+     disk (file://) — which is exactly how you'll first preview
+     this before pushing to GitHub Pages. Namespacing keeps the
+     same separation of concerns without that trap.
+     ============================================================ */
+
+  // ---------- Hearts (ambient particles) ----------
+  const HeartsFX = {
+    init(){
+      const container = document.getElementById('hearts');
+      const symbols = ['💛','✦','♥'];
+      for(let i=0;i<14;i++){
+        const s = document.createElement('span');
+        s.textContent = symbols[Math.floor(Math.random()*symbols.length)];
+        s.style.left = Math.random()*100 + '%';
+        s.style.fontSize = (9 + Math.random()*10) + 'px';
+        s.style.animationDuration = (10 + Math.random()*14) + 's';
+        s.style.animationDelay = (Math.random()*14) + 's';
+        container.appendChild(s);
+      }
+    }
+  };
+
+  // ---------- Reveal on scroll ----------
+  const RevealFX = {
+    init(){
+      const screenEl = document.getElementById('screen');
+      const els = document.querySelectorAll('.reveal');
+      const io = new IntersectionObserver((entries)=>{
+        entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+      },{ root: screenEl, threshold:0.15 });
+      els.forEach(el=>io.observe(el));
+    }
+  };
+
+  // ---------- Typewriter for the LCD title ----------
+  const TypeFX = {
+    type(el, text, speed){
+      speed = speed || 55;
+      let i = 0;
+      el.textContent = '';
+      const cursor = document.createElement('span');
+      cursor.className = 'typewriter-cursor';
+      cursor.textContent = '\u00A0';
+      function step(){
+        if(i <= text.length){
+          el.textContent = text.slice(0, i);
+          el.appendChild(cursor);
+          i++;
+          requestAnimationFrame(()=> setTimeout(step, speed));
+        } else {
+          setTimeout(()=> cursor.remove(), 900);
+        }
+      }
+      step();
+    },
+    init(){
+      const el = document.getElementById('typedTitle');
+      if(!el) return;
+      // Respect reduced-motion users: just show the final text.
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if(prefersReduced){ el.textContent = 'FOR MY BEST FRIEND'; return; }
+      this.type(el, 'FOR MY BEST FRIEND', 45);
+    }
+  };
+
+  // ---------- Sound: synthesized click + soft ambient pad ----------
+  // No audio files are bundled (network access here is restricted to a
+  // handful of package registries, not general media hosts), so both
+  // effects are generated on the fly with the Web Audio API. This also
+  // means there's nothing extra to upload to GitHub for sound to work.
+  const SoundFX = {
+    ctx: null,
+    musicOn: false,
+    musicNodes: null,
+    ensureCtx(){
+      if(!this.ctx){
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if(AC) this.ctx = new AC();
+      }
+      if(this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
+      return this.ctx;
+    },
+    click(){
+      const ctx = this.ensureCtx();
+      if(!ctx) return;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'square';
+      osc.frequency.value = 720;
+      gain.gain.setValueAtTime(0.05, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.08);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.09);
+    },
+    startMusic(){
+      const ctx = this.ensureCtx();
+      if(!ctx || this.musicOn) return;
+      const master = ctx.createGain();
+      master.gain.value = 0.0;
+      master.connect(ctx.destination);
+      master.gain.linearRampToValueAtTime(0.035, ctx.currentTime + 1.2);
+
+      const notes = [261.6, 329.6, 392.0]; // soft C major triad
+      const oscs = notes.map((freq)=>{
+        const osc = ctx.createOscillator();
+        const g = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        g.gain.value = 0.6;
+        osc.connect(g).connect(master);
+        osc.start();
+        return osc;
+      });
+
+      this.musicNodes = { master, oscs };
+      this.musicOn = true;
+    },
+    stopMusic(){
+      if(!this.musicOn || !this.musicNodes) return;
+      const ctx = this.ctx;
+      const { master, oscs } = this.musicNodes;
+      master.gain.linearRampToValueAtTime(0.0, ctx.currentTime + 0.6);
+      setTimeout(()=>{ oscs.forEach(o=> o.stop()); }, 700);
+      this.musicOn = false;
+      this.musicNodes = null;
+    },
+    toggleMusic(){
+      if(this.musicOn) this.stopMusic(); else this.startMusic();
+      return this.musicOn;
+    }
+  };
+
+  // ---------- Haptics ----------
+  const HapticFX = {
+    tap(ms){
+      if(navigator.vibrate){
+        try{ navigator.vibrate(ms || 12); }catch(e){ /* no-op */ }
+      }
+    }
+  };
+
+  // ---------- Day / night theme ----------
+  const ThemeFX = {
+    init(){
+      const btn = document.getElementById('themeToggle');
+      btn.addEventListener('click', ()=>{
+        const isNight = document.body.getAttribute('data-theme') !== 'day';
+        document.body.setAttribute('data-theme', isNight ? 'day' : 'night');
+        btn.textContent = isNight ? '☀️' : '🌙';
+        btn.setAttribute('aria-pressed', isNight ? 'true' : 'false');
+        HapticFX.tap(8);
+      });
+    }
+  };
+
+  // ---------- Particle burst for gift reveals ----------
+  const ParticleFX = {
+    burst(originEl){
+      const colors = ['#c9a15a','#e9caa0','#a53142','#f7efdc'];
+      const glyphs = ['💛','✦','🎉','♥'];
+      const rect = originEl ? originEl.getBoundingClientRect() : { left: window.innerWidth/2, top: window.innerHeight/2, width:0, height:0 };
+      const originX = rect.left + rect.width/2;
+      const originY = rect.top + rect.height/2;
+
+      for(let i=0;i<30;i++){
+        const useGlyph = Math.random() < 0.35;
+        const p = document.createElement('div');
+        p.className = 'confetti-piece';
+        p.style.left = originX + 'px';
+        p.style.top = originY + 'px';
+        const angle = Math.random() * Math.PI * 2;
+        const dist = 90 + Math.random()*220;
+        const dx = Math.cos(angle) * dist;
+        const dy = Math.sin(angle) * dist - 60; // slight upward bias
+
+        if(useGlyph){
+          p.textContent = glyphs[Math.floor(Math.random()*glyphs.length)];
+          p.style.fontSize = (12 + Math.random()*10) + 'px';
+        } else {
+          p.style.width = p.style.height = (5+Math.random()*6)+'px';
+          p.style.background = colors[Math.floor(Math.random()*colors.length)];
+        }
+        document.body.appendChild(p);
+        const duration = 900 + Math.random()*700;
+        p.animate([
+          { transform:'translate(0,0) rotate(0deg)', opacity:1 },
+          { transform:`translate(${dx}px, ${dy}px) rotate(${(Math.random()-0.5)*480}deg)`, opacity:0 }
+        ], { duration, easing:'cubic-bezier(.2,.7,.3,1)' });
+        setTimeout(()=>p.remove(), duration+50);
+      }
+    }
+  };
+
+  // ---------- Gift modals (open/close, focus trap, swipe, keyboard) ----------
+  const GiftModal = {
+    modals: {},
+    lastFocused: null,
+    init(){
+      this.modals.modal1 = document.getElementById('modal1');
+      this.modals.modal2 = document.getElementById('modal2');
+
+      document.getElementById('gift1Btn').addEventListener('click', (e)=>{
+        SoundFX.click(); HapticFX.tap(15);
+        this.open('modal1', e.currentTarget);
+      });
+      document.getElementById('gift2Btn').addEventListener('click', (e)=>{
+        SoundFX.click(); HapticFX.tap(15);
+        this.open('modal2', e.currentTarget);
+      });
+      document.getElementById('modal1Close').addEventListener('click', ()=>{ SoundFX.click(); this.close('modal1'); });
+      document.getElementById('modal2Close').addEventListener('click', ()=>{ SoundFX.click(); this.close('modal2'); });
+
+      Object.values(this.modals).forEach((overlay)=>{
+        overlay.addEventListener('click', (e)=>{ if(e.target === overlay) this.close(overlay.id); });
+      });
+
+      document.addEventListener('keydown', (e)=>{
+        const openId = this.currentlyOpen();
+        if(!openId) return;
+        if(e.key === 'Escape'){ this.close(openId); }
+        if(e.key === 'Tab'){ this.trapFocus(e, openId); }
+      });
+
+      this.initSwipe('modal1Card', 'modal1');
+      this.initSwipe('modal2Card', 'modal2');
+    },
+    currentlyOpen(){
+      return Object.values(this.modals).find(m=> m.classList.contains('open'))?.id || null;
+    },
+    open(id, triggerEl){
+      this.lastFocused = triggerEl || document.activeElement;
+      this.modals[id].classList.add('open');
+      ParticleFX.burst(triggerEl);
+      const closeBtn = this.modals[id].querySelector('.modal-close');
+      if(closeBtn) closeBtn.focus();
+    },
+    close(id){
+      this.modals[id].classList.remove('open');
+      if(this.lastFocused) this.lastFocused.focus();
+    },
+    switchTo(id, triggerEl){
+      const open = this.currentlyOpen();
+      if(open) this.modals[open].classList.remove('open');
+      this.open(id, triggerEl);
+    },
+    trapFocus(e, id){
+      const focusables = this.modals[id].querySelectorAll('button, [href], input, [tabindex]:not([tabindex="-1"])');
+      if(!focusables.length) return;
+      const first = focusables[0], last = focusables[focusables.length-1];
+      if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+      else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+    },
+    initSwipe(cardId, modalId){
+      const card = document.getElementById(cardId);
+      let startX = 0, startY = 0, tracking = false;
+      card.addEventListener('touchstart', (e)=>{
+        startX = e.touches[0].clientX; startY = e.touches[0].clientY; tracking = true;
+      }, { passive:true });
+      card.addEventListener('touchend', (e)=>{
+        if(!tracking) return;
+        tracking = false;
+        const dx = e.changedTouches[0].clientX - startX;
+        const dy = e.changedTouches[0].clientY - startY;
+        const absX = Math.abs(dx), absY = Math.abs(dy);
+        const threshold = 55;
+        if(absY > absX && dy > threshold){
+          this.close(modalId); HapticFX.tap(10); // swipe down closes
+          return;
+        }
+        if(absX > absY && absX > threshold){
+          const other = modalId === 'modal1' ? 'modal2' : 'modal1';
+          HapticFX.tap(10);
+          this.switchTo(other, null);
+        }
+      }, { passive:true });
+    }
+  };
+
+  // ---------- Image error handling ----------
+  const ImageFX = {
+    init(){
+      const pairs = [
+        ['photoImg','photoPlaceholder'],
+        ['giftImg','giftPlaceholder']
+      ];
+      pairs.forEach(([imgId, phId])=>{
+        const img = document.getElementById(imgId);
+        const ph = document.getElementById(phId);
+        img.addEventListener('error', ()=>{
+          img.style.display = 'none';
+          ph.style.display = 'flex';
+        }, { once:true });
+      });
+    }
+  };
+
+  // ---------- Keypad press feel ----------
+  const KeypadFeel = {
+    init(){
+      document.querySelectorAll('.gift-key').forEach((btn)=>{
+        btn.addEventListener('pointerdown', ()=>{ btn.classList.add('pressed'); HapticFX.tap(8); });
+        ['pointerup','pointerleave','pointercancel'].forEach(evt=>{
+          btn.addEventListener(evt, ()=> btn.classList.remove('pressed'));
+        });
+      });
+    }
+  };
+
+  // ---------- Sound toggle button wiring ----------
+  const SoundToggle = {
+    init(){
+      const btn = document.getElementById('soundToggle');
+      btn.addEventListener('click', ()=>{
+        const on = SoundFX.toggleMusic();
+        btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+        btn.textContent = on ? '🔊' : '🎵';
+        HapticFX.tap(8);
+      });
+    }
+  };
+
+  // ---------- Service worker (PWA) ----------
+  const PWAInit = {
+    init(){
+      if('serviceWorker' in navigator && location.protocol.startsWith('http')){
+        window.addEventListener('load', ()=>{
+          navigator.serviceWorker.register('sw.js').catch(()=>{ /* offline caching just won't be available */ });
+        });
+      }
+    }
+  };
+
+  document.addEventListener('DOMContentLoaded', function(){
+    HeartsFX.init();
+    RevealFX.init();
+    TypeFX.init();
+    ThemeFX.init();
+    SoundToggle.init();
+    GiftModal.init();
+    ImageFX.init();
+    KeypadFeel.init();
+    PWAInit.init();
+  });
+})();
+</script>
+
+</body>
+</html>
