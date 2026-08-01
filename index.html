@@ -647,8 +647,14 @@ at least we'll be laughing together.</span><span class="stanza">Happy Friendship
       this.lastFocused = triggerEl || document.activeElement;
       this.modals[id].classList.add('open');
       ParticleFX.burst(triggerEl);
+      const card = this.modals[id].querySelector('.modal-card');
       const closeBtn = this.modals[id].querySelector('.modal-close');
-      if(closeBtn) closeBtn.focus();
+      // Focusing the close button (bottom of the card) would normally
+      // make the browser auto-scroll it into view, which is why the
+      // poem opened scrolled to the bottom. preventScroll stops that,
+      // and we reset scrollTop as a fallback for older browsers.
+      if(closeBtn) closeBtn.focus({ preventScroll:true });
+      if(card) card.scrollTop = 0;
     },
     close(id){
       this.modals[id].classList.remove('open');
